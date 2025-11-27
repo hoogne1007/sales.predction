@@ -1,6 +1,9 @@
+
 import time
 import random
+import os
 from PyQt5.QtCore import QObject, pyqtSignal
+from core.report_generator import generate_report_pdf
 
 from ml.model_handler import train_model 
 
@@ -28,10 +31,36 @@ class ModelTrainingWorker(QObject):
             results = train_model(
                 self.selected_features, self.algorithm_choice, self.hyperparameters
             )
-            
             self.progress.emit(100)
             self.finished.emit(results)
 
     def stop(self):
         """Stops the worker."""
         self.is_running = False
+        
+class ReportGenerationWorker(QObject):
+    """
+    A worker that runs the PDF report generation in a separate thread.
+    """
+    finished = pyqtSignal(str, bool) # Emits the report path and success status
+
+    def __init__(self, output_path, report_name):
+        super().__init__()
+        self.output_path = output_path
+        self.report_name = report_name
+
+    def run(self):
+        """The main work method."""
+        try:
+            # Simulate a bit of a delay for data fetching/processing
+            time.sleep(2)
+            
+            # Call the actual PDF generator
+            generate_report_pdf(self.output_path, self.report_name)
+            
+            # Emit success signal
+            self.finished.emit(self.output_path, True)
+        except Exception as e:
+            print(f"Error generating report: {e}")
+            # Emit failure signal
+            self.finished.emit(str(e), False)
