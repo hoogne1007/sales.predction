@@ -4,9 +4,7 @@ from PyQt5.QtCore import QFile, QTextStream
 
 from ui.prediction_tab import PredictionTab
 from ui.overview_tab import OverviewTab
-class ReportsTab(QWidget):
-    def __init__(self):
-        super().__init__()
+from ui.report_tab import ReportsTab
 
 class SalesForecastApp(QMainWindow):
     def __init__(self):
