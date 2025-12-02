@@ -4,7 +4,7 @@ from PyQt5.QtCore import QFile, QTextStream
 
 from ui.prediction_tab import PredictionTab
 from ui.overview_tab import OverviewTab
-from ui.report_tab import ReportsTab
+from ui.reports_tab import ReportsTab
 
 class SalesForecastApp(QMainWindow):
     def __init__(self):
@@ -30,14 +30,17 @@ class SalesForecastApp(QMainWindow):
         self.tabs.addTab(self.reports_tab, "REPORTS")
 
         self.tabs.setCurrentWidget(self.prediction_tab)
+        self.load_stylesheet("ui/styles.qss")
 
     def load_stylesheet(self, filename):
         style_file = QFile(filename)
-        if style_file.open(QFile.ReadOnly | QFile.Text):
-            stream = QTextStream(style_file)
-            self.setStyleSheet(stream.readAll())
+        if not style_file.open(QFile.ReadOnly | QFile.Text):
+            print(f"Error: Could not open stylesheet file: {filename}")
+            return
+        stream = QTextStream(style_file)
+        self.setStyleSheet(stream.readAll())
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     app = QApplication(sys.argv)
     window = SalesForecastApp()
     window.show()
