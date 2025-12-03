@@ -4,7 +4,7 @@ from PyQt5.QtCore import QFile, QTextStream
 
 from ui.prediction_tab import PredictionTab
 from ui.overview_tab import OverviewTab
-from ui.reports_tab import ReportsTab
+from ui.report_tab import ReportsTab
 
 class SalesForecastApp(QMainWindow):
     def __init__(self):
@@ -40,7 +40,7 @@ class SalesForecastApp(QMainWindow):
         stream = QTextStream(style_file)
         self.setStyleSheet(stream.readAll())
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = SalesForecastApp()
     window.show()
