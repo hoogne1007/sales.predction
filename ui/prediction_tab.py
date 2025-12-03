@@ -159,10 +159,18 @@ class PredictionTab(QWidget):
     def on_training_finished(self, results):
         """Handles the results from the worker thread."""
         print("UI: Worker finished, received results.")
-        self.summary_label_accuracy.setText(f"Achieved Accuracy: {results['achieved_accuracy']}")
-        self.summary_label_model_id.setText(f"Model ID: {results['model_id']}")
-        self.training_progress.setFormat("Completed")
         
+        # Check if an error occurred during training
+        if "error" in results:
+            self.summary_label_accuracy.setText(f"Status: Error")
+            self.summary_label_model_id.setText(f"Details: {results['error']}")
+            self.training_progress.setFormat("Error")
+        else:
+            # Use the new, correct keys: 'rmse' and 'model_id'
+            self.summary_label_accuracy.setText(f"Model RMSE: {results['rmse']}")
+            self.summary_label_model_id.setText(f"Model ID: {results['model_id']}")
+            self.training_progress.setFormat("Completed")
+
         # Re-enable the UI
         self.retrain_button.setEnabled(True)
         self.cancel_button.setEnabled(False)

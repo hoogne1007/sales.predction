@@ -6,7 +6,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-from ml.data_loader import load_and_preprocess_data
+from ml.data_louder import load_and_preprocess_data
 
 def train_model(selected_features, algorithm_choice, hyperparameters):
     """
@@ -41,7 +41,7 @@ def train_model(selected_features, algorithm_choice, hyperparameters):
 
     # 4. Evaluate Model
     predictions = model.predict(X_test)
-    rmse = np.sqrt(mean_squared_error(y_test, predictions))
+   
     print(f"Model evaluation RMSE: {rmse:.2f}")
 
     # 5. Save the Trained Model

@@ -2,7 +2,7 @@ import os
 import joblib
 import pandas as pd
 import numpy as np
-from ml.data_loader import load_and_preprocess_data
+from ml.data_louder import load_and_preprocess_data
 
 def get_latest_model_path():
     """Finds the most recently trained model file in the models directory."""

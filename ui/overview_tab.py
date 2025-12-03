@@ -72,14 +72,27 @@ class OverviewTab(QWidget):
     def update_dashboard(self):
         """Fetches new data and updates all UI elements."""
         data = generate_prediction_data()
+        
+        if data.get("error"):
+            # Clear the plot and display the error message
+            self.canvas.axes.clear()
+            self.canvas.axes.text(0.5, 0.5, data["error"], 
+                                  ha='center', va='center', fontsize=12, wrap=True)
+            self.canvas.draw()
+            # Clear other UI elements
+            self.kpi_prediction_label.setText("N/A")
+            self.quality_score_label.setText("0%")
+            self.clear_layout(self.model_perf_layout)
+            self.clear_layout(self.feature_layout)
+            return
 
         # Update Chart
-        self.canvas.axes.clear() # Clear previous plot
+        self.canvas.axes.clear()
         self.canvas.axes.plot(data['historical_x'], data['historical_y'], marker='o', label='Actual Sales History')
         self.canvas.axes.plot(data['predicted_x'], data['predicted_y'], marker='o', linestyle='--', label='Predicted')
         self.canvas.axes.set_title("Revenue Forecast")
-        self.canvas.axes.set_xlabel("Time Period")
-        self.canvas.axes.set_ylabel("Revenue (Units)")
+        self.canvas.axes.set_xlabel("Time Period Index")
+        self.canvas.axes.set_ylabel("Sales")
         self.canvas.axes.legend()
         self.canvas.axes.grid(True)
         self.canvas.draw()
@@ -87,25 +100,22 @@ class OverviewTab(QWidget):
         # Update KPI
         self.kpi_prediction_label.setText(data['next_quarter_prediction'])
 
-        # Update Model Performance Table (clear and repopulate)
+        # Update Model Performance Table
         self.clear_layout(self.model_perf_layout)
         self.model_perf_layout.addWidget(QLabel("<b>Metric</b>"), 0, 0)
         self.model_perf_layout.addWidget(QLabel("<b>Value</b>"), 0, 1)
-        row = 1
-        for key, value in data['model_performance'].items():
-            self.model_perf_layout.addWidget(QLabel(key), row, 0)
-            self.model_perf_layout.addWidget(QLabel(value), row, 1)
-            row += 1
+        # You would populate this from the model handler's results in a real scenario
+        self.model_perf_layout.addWidget(QLabel("RMSE"), 1, 0)
+        self.model_perf_layout.addWidget(QLabel("..."), 1, 1)
 
-        # Update Feature Weights Table (clear and repopulate)
+
+        # Update Feature Weights Table
         self.clear_layout(self.feature_layout)
         self.feature_layout.addWidget(QLabel("<b>Feature</b>"), 0, 0)
         self.feature_layout.addWidget(QLabel("<b>Weight</b>"), 0, 1)
-        row = 1
-        for key, value in data['feature_weights'].items():
-            self.feature_layout.addWidget(QLabel(key), row, 0)
-            self.feature_layout.addWidget(QLabel(value), row, 1)
-            row += 1
+        # In a real app, you'd get feature importances from the model
+        self.feature_layout.addWidget(QLabel("MarketingSpend"), 1, 0)
+        self.feature_layout.addWidget(QLabel("..."), 1, 1)
 
         # Update Data Quality Score
         self.quality_score_label.setText(f"{data['data_quality_score']}%")
