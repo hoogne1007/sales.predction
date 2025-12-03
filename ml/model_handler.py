@@ -41,7 +41,7 @@ def train_model(selected_features, algorithm_choice, hyperparameters):
 
     # 4. Evaluate Model
     predictions = model.predict(X_test)
-   
+    rmse = np.sqrt(mean_squared_error(y_test, predictions))
     print(f"Model evaluation RMSE: {rmse:.2f}")
 
     # 5. Save the Trained Model
